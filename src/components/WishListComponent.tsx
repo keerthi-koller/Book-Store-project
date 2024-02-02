@@ -11,7 +11,7 @@ interface BookDetailInterface {
         discountPrice: number,
         _id: string,
         admin_user_id: string,
-        price: number,
+        price: number | undefined,
         quantity: number | undefined,
         author: string,
     },
