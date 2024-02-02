@@ -7,13 +7,13 @@ import WishListCardComponent from "./WishListCardComponent";
 interface BookDetailInterface {
     product_id: {
         description: string,
-        bookName: string,
+        bookName: string | undefined,
         discountPrice: number,
         _id: string | undefined,
         admin_user_id: string,
         price: number | undefined,
         quantity: number | undefined,
-        author: string,
+        author: string | undefined,
     },
     author: string,
     bookName: string,
@@ -22,7 +22,6 @@ interface BookDetailInterface {
     price: number | undefined,
     quantity: number | undefined,
     _id: string
-    
 }
 
 function WishListComponent() {
