@@ -9,7 +9,7 @@ interface BookDetailInterface {
         description: string,
         bookName: string,
         discountPrice: number,
-        _id: string,
+        _id: string | undefined,
         admin_user_id: string,
         price: number | undefined,
         quantity: number | undefined,
@@ -22,6 +22,7 @@ interface BookDetailInterface {
     price: number | undefined,
     quantity: number | undefined,
     _id: string
+    
 }
 
 function WishListComponent() {
