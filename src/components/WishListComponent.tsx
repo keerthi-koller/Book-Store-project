@@ -20,7 +20,7 @@ interface BookDetailInterface {
     description: string,
     discountPrice: number | undefined,
     price: number | undefined,
-    quantity: number | undefined,
+    quantity: number,
     _id: string
 }
 
