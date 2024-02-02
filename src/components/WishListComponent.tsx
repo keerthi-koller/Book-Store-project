@@ -12,7 +12,7 @@ interface BookDetailInterface {
         _id: string,
         admin_user_id: string,
         price: number,
-        quantity: number,
+        quantity: number | undefined,
         author: string,
     },
     author: string,
@@ -32,7 +32,7 @@ function WishListComponent() {
     const wishListItems = useSelector((store: any) => store.wishList.wishListItems);
 
     console.log(bookDetail);
-    
+
     useEffect(() => {
         setBookDetail(wishListItems);
     }, [wishListItems]);
