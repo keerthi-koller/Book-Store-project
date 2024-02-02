@@ -6,32 +6,63 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import LoginSignUp from './components/LoginSignUp';
 import Home from './components/Home';
 import BooksComponent from './components/BooksComponent';
+import ErrorComponent from './components/ErrorComponent';
+import ForgotPassword from './components/ForgotPassword';
+import BookDetails from './components/BookDetails';
+import FeedbackComponent from './components/FeedbackComponent';
+import CartComponent from './components/CartComponent';
+import { Provider } from 'react-redux';
+import appStore from './utils/store/appstore';
+import WishListComponent from './components/WishListComponent';
 
-const router = createBrowserRouter ([
+const router = createBrowserRouter([
   {
-    path:'/',
-    element:<LoginSignUp />
+    path: '/',
+    element: <LoginSignUp />,
   },
   {
-    path:'/home',
-    element:<Home />,
-    children:[
+    path: '/book',
+    element: <Home />,
+    children: [
       {
-        path:'',
-        element:<BooksComponent />
+        path: '',
+        element: <BooksComponent />
+      },
+      {
+        path: ':bookId',
+        element: <BookDetails />,
+      },
+      {
+        path: 'forgotPassword',
+        element: <ForgotPassword />
+      },
+      {
+        path: 'cartDetails',
+        element: <CartComponent />,
+      },
+      {
+        path: 'wishListDetails',
+        element: <WishListComponent />
       }
     ]
-  }
+  },
+  {
+    path: '*',
+    element: <ErrorComponent />
+  },
 ])
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  <React.StrictMode>
-    {/* <App /> */}
+  // <React.StrictMode>
+  <Provider store={appStore}>
     <RouterProvider router={router} />
-  </React.StrictMode>
+
+  </Provider>
+  // <App />
+  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -22,8 +22,8 @@ function LoginSignUp () {
 
     return (
         <>
-            <div className='w-full h-[695px] p-[130px]' style={{backgroundColor:`${bgColor}`}}>
-                <div className='flex justify-center items-center'>
+            <div className='w-full h-[695px]' style={{backgroundColor:`${bgColor}`}}>
+                <div className='h-full flex justify-center items-center'>
                     <div className='w-3/12 h-[430px] bg-slate-100 rounded-xl rounded-r-none flex flex-col gap-5 font-bold justify-center items-center'>
                         <img className='w-3/4 h-3/5 rounded-full' src={img} alt='img' />
                         <h1>ONLINE BOOK SHOPPING</h1>
