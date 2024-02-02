@@ -24,13 +24,11 @@ interface BookDetailInterface {
 function CartComponent() {
 
     const [expanded, setExpanded] = useState(false);
-
     const handleExpansion = () => {
         setExpanded((prevExpanded) => !prevExpanded);
     };
 
     const [expandedNew, setExpandedNew] = useState(false);
-
     const handleExpansionNew = () => {
         setExpandedNew((prevExpanded) => !prevExpanded);
     };

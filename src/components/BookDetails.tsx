@@ -229,7 +229,9 @@ function BookDetails() {
                                 </div>
                             </div>
                         </div>
-                        {feedBackReviews.map((ele: any) => (<FeedbackComponent feedBack={ele} />))}
+                        <div className='w-full'>
+                            {feedBackReviews.map((ele: any) => (<FeedbackComponent feedBack={ele} />))}
+                        </div>
                     </div>
                 </div>
             </div>
