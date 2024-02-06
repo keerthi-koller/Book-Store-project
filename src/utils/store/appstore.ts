@@ -9,7 +9,7 @@ const appStore = configureStore({
         cart : cartSlice,
         books : bookSlice,
         wishList : wishListSlice,
-        feedback : reviewSlice
+        feedback : reviewSlice,
     }
 })
 

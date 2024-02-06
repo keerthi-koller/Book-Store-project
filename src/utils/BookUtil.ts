@@ -10,7 +10,7 @@ const configForBooks = () => {
      }
  }
      return header
- }
+}
 
 export const getAllBooks = async () => {
     const allBooks = await axios.get(`${REACT_BASE_URL}bookstore_user/get/book`);
@@ -63,4 +63,8 @@ export const addFeedback = async (obj:any, product_id:string|undefined) => {
 export const getFeedback = async (product_id:string|undefined) => {
     const data = await axios.get(`${REACT_BASE_URL}bookstore_user/get/feedback/${product_id}`, configForBooks());
     return data.data.result;
+}
+
+export const addOrder = async (obj:any) => {
+    const data = await axios.post(`${REACT_BASE_URL}bookstore_user/add/order`, JSON.stringify(obj), configForBooks());
 }

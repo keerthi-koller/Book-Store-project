@@ -36,7 +36,7 @@ function Login () {
         const result = loginUser(obj);
         result
         .then( (res) => {
-            console.log(res);            
+            console.log(res);
             localStorage.setItem("accessToken", res.data.result.accessToken);
             navigate("/book");
         } )

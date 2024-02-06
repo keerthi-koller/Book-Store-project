@@ -64,7 +64,7 @@ function WishListComponent() {
                 </div>
             </div>
         </div>
-        <Outlet />
+        {/* <Outlet /> */}
     </>)
 }
 

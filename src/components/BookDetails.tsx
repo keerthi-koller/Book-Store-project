@@ -7,7 +7,7 @@ import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import BookFront from "../assets/BookFront.png";
 import BookBg from "../assets/BookBG.png";
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { Outlet, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Book1 from "../assets/Book1.png";
 import { useDispatch, useSelector } from 'react-redux';
 import { addItemToCart, updateCartList } from '../utils/store/cartSlice';
@@ -51,6 +51,7 @@ function BookDetails() {
 
     const cartLists = useSelector((store: any) => store.cart.cartitems);
     const cart = cartLists.filter((ele: any) => ele.product_id?._id == bookId);
+
 
     const feedBackReviews = useSelector((store: any) => store.feedback.feedbackItems);
 

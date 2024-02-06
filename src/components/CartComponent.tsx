@@ -1,15 +1,17 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
-import { Button, FormControl, FormControlLabel, Radio, RadioGroup } from "@mui/material";
+import { Button, FormControl, FormControlLabel, Radio, RadioGroup, TextField } from "@mui/material";
 import CartCardComponent from "./CartCardComponent";
 import { useEffect, useState } from "react";
-import OrderedBookComponent from "./OrderedBookComponent";
 import Accordion, { AccordionSlots } from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Fade from '@mui/material/Fade';
+import OrderedBookComponent from "./OrderedBookComponent";
+import { customerDetails } from "../utils/UserUtil";
+import { updateCartAddress } from "../utils/store/cartSlice";
+import { addOrder } from "../utils/BookUtil";
 
 interface BookDetailInterface {
     author: string,
@@ -23,6 +25,8 @@ interface BookDetailInterface {
 
 function CartComponent() {
 
+    const [showOffice, setShowOffice] = useState(false);
+    const [showHome, setShowHome] = useState(false);
     const [expanded, setExpanded] = useState(false);
     const handleExpansion = () => {
         setExpanded((prevExpanded) => !prevExpanded);
@@ -36,10 +40,57 @@ function CartComponent() {
     const navigate = useNavigate();
     const [bookDetail, setBookDetail] = useState<BookDetailInterface[] | undefined>();
 
+    const dispatch = useDispatch();
+
+    const updateHomeAddress = () => {
+        const obj = {
+            "addressType": "Home",
+            "fullAddress": (document.getElementById("fullAddressHome") as HTMLInputElement).value,
+            "city": (document.getElementById("cityHome") as HTMLInputElement).value,
+            "state": (document.getElementById("stateHome") as HTMLInputElement).value,
+        }
+        customerDetails(obj);
+        dispatch(updateCartAddress(obj));
+    }
+
+    const updateOfficeAddress = () => {
+        const obj = {
+            "addressType": "Office",
+            "fullAddress": (document.getElementById("fullAddressOffice") as HTMLInputElement).value,
+            "city": (document.getElementById("cityOffice") as HTMLInputElement).value,
+            "state": (document.getElementById("stateOffice") as HTMLInputElement).value,
+        }
+        customerDetails(obj);
+        dispatch(updateCartAddress(obj));
+    }
+
     const cartItems = useSelector((store: any) => store.cart.cartitems);
+    console.log(cartItems);    
+    const orderDetail = JSON.stringify(cartItems);
+    localStorage.setItem("myOrders", orderDetail);
+
     useEffect(() => {
         setBookDetail(cartItems);
     }, [cartItems]);
+
+    const addBookToOrder = () => {
+
+        const orders = cartItems.map((ele: any) => {
+            const orderDetail = {
+                product_id: ele?.product_id?._id,
+                product_name: ele?.product_id?.bookName,
+                product_quantity: ele?.quantityToBuy,
+                product_price: ele?.product_id?.price,
+            }
+            return orderDetail;
+        })
+
+        const orderedBooks = {
+            orders: orders,
+        }
+
+        addOrder(orderedBooks);
+    }
 
     return (<>
         <div className="w-full flex justify-center items-center">
@@ -57,11 +108,11 @@ function CartComponent() {
                             <h1>BridgeLabz Solutions Bangalore</h1>
                         </div>
                     </div>
-                        {bookDetail?.length == 0 ?
-                            <h1 className="w-3/4 flex justify-center">Your Cart is Empty</h1>
-                            :
-                            bookDetail?.map((val: any) => <CartCardComponent bookList={val} key={val._id} />)
-                        }
+                    {bookDetail?.length == 0 ?
+                        <h1 className="w-3/4 flex justify-center">Your Cart is Empty</h1>
+                        :
+                        bookDetail?.map((val: any) => <CartCardComponent bookList={val} key={val._id} />)
+                    }
                     <div className='flex justify-end'>
                         <Accordion
                             expanded={expanded}
@@ -69,17 +120,16 @@ function CartComponent() {
                             slots={{ transition: Fade as AccordionSlots['transition'] }}
                             slotProps={{ transition: { timeout: 400 } }}
                             sx={{
-                            boxShadow:"none",
-                            '& .MuiAccordion-region': { height: expanded ? 'auto' : 0 },
-                            '& .MuiAccordionDetails-root': { display: expanded ? 'block' : 'none' },
+                                boxShadow: "none",
+                                '& .MuiAccordion-region': { height: expanded ? 'auto' : 0 },
+                                '& .MuiAccordionDetails-root': { display: expanded ? 'block' : 'none' },
                             }}
                         >
                             <AccordionSummary
-                                // expandIcon={<ExpandMoreIcon />}
                                 aria-controls="panel1-content"
                                 id="panel1-header"
-                                >
-                                    <Button variant="contained">Place Order</Button>
+                            >
+                                <Button variant="contained">Place Order</Button>
                             </AccordionSummary>
                         </Accordion>
                     </div>
@@ -93,8 +143,8 @@ function CartComponent() {
                         slots={{ transition: Fade as AccordionSlots['transition'] }}
                         slotProps={{ transition: { timeout: 400 } }}
                         sx={{
-                        '& .MuiAccordion-region': { height: expanded ? 'auto' : 0 },
-                        '& .MuiAccordionDetails-root': { display: expanded ? 'block' : 'none' },
+                            '& .MuiAccordion-region': { height: expanded ? 'auto' : 0 },
+                            '& .MuiAccordionDetails-root': { display: expanded ? 'block' : 'none' },
                         }}
                     >
                         <Typography className="p-5 font-bold">Customer Details</Typography>
@@ -108,53 +158,93 @@ function CartComponent() {
                                         <div className="w-1/2">
                                             <label className="font-bold text-xs">Full Name</label>
                                             <div className="border border-2 border-[#E2E2E2] h-10 flex items-center pl-2">
-                                                <p>Poonam Yadav</p>
+                                                <p>{cartItems[0]?.user_id?.fullName}</p>
                                             </div>
                                         </div>
                                         <div className="w-1/2">
                                             <label className="font-bold text-xs">Mobile Number</label>
                                             <div className="border border-2 border-[#E2E2E2] h-10 flex items-center pl-2">
-                                                <p>81678954778</p>
+                                                <p>{cartItems[0]?.user_id?.phone}</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div>
-                                    <FormControl>
+                                <div className="w-3/4">
+                                    <FormControl className="w-full">
                                         <RadioGroup
                                             aria-labelledby="demo-radio-buttons-group-label"
-                                            defaultValue="work"
+                                            defaultValue="Office"
                                             name="radio-buttons-group"
                                         >
-                                            <FormControlLabel value="work" control={<Radio color="error" size="small" />} label="1. Work" />
-                                            <div className="p-5 flex flex-col gap-5">
-                                                <div className="flex flex-col w-3/4 gap-2">
-                                                    <h1 className="font-bold text-xs">Address</h1>
-                                                    <div className="border border-2 border-[#E2E2E2] bg-[#F5F5F5] p-2">
-                                                        <h1 className="text-slate-500 text-sm">BridgeLabz Solutions LLP, No.42, 14th Main, 15th Cross, Sector 4, Opp to BDA Complex, near Kumarakom restaurant, HSR Layout Bangalore.</h1>
-                                                    </div>
-                                                </div>
-                                                <div className="w-3/4 flex gap-10">
-                                                    <div className="w-1/2 flex flex-col gap-2">
-                                                        <h1 className="font-bold text-xs">City/Town</h1>
-                                                        <div className="border border-2 border-[#E2E2E2] bg-[#F5F5F5] p-2">
-                                                            <h1 className="text-slate-500 text-sm">Bengaluru</h1>
-                                                        </div>
-                                                    </div>
-                                                    <div className="w-1/2 flex flex-col gap-2">
-                                                        <h1 className="font-bold text-xs">State</h1>
-                                                        <div className="border border-2 border-[#E2E2E2] bg-[#F5F5F5] p-2">
-                                                            <h1 className="text-slate-500 text-sm">Karnataka</h1>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                            <div className="flex">
+                                                <FormControlLabel value="Office" control={<Radio color="error" size="small" />} label="1. Office" />
+                                                <Button variant="outlined" sx={{ height: "25px", fontSize: "10px", marginTop: "8px", textAlign: "center" }} onClick={() => { setShowOffice(true); setShowHome(false); }}>edit</Button>
                                             </div>
-                                            <FormControlLabel value="home" control={<Radio color="error" size="small" />} label="2. Home" />
-                                            <div className="w-3/4 flex">
-                                                <div className="w-full p-5 flex flex-col gap-2">
-                                                    <h1 className="font-bold">Address</h1>
-                                                    <h1 className="text-sm">BridgeLabz Solutions LLP, No.42, 14th Main, 15th Cross, Sector 4, Opp to BDA Complex, near Kumarakom restaurant, HSR Layout Bangalore.</h1>
-                                                </div>
+                                            <div className="w-full p-5 flex flex-col gap-5">
+                                                <h1 className="font-bold text-xs">Address</h1>
+                                                {!showOffice ?
+                                                    <div className="w-full flex flex-col gap-2">
+                                                        {cartItems[0]?.user_id?.address.map((ele: any, key: any) => {
+                                                            if (ele?.addressType == "Office") {
+                                                                return (<>
+                                                                    <h1 className="text-slate-500 text-sm">{ele.fullAddress} {ele.city} {ele.state}</h1>
+                                                                </>)
+                                                            }
+                                                        })}
+                                                    </div>
+                                                    :
+                                                    <div className="w-full flex flex-col gap-2">
+                                                        <TextField id="fullAddressOffice" sx={{ width: "100%", backgroundColor: "#F5F5F5" }} variant="outlined" defaultValue={cartItems[0]?.user_id.address.filter((ele: any) => ele.addressType == "Office")[0]?.fullAddress} />
+                                                        <div className="w-3/4 flex gap-10">
+                                                            <div className="w-1/2 flex flex-col gap-2">
+                                                                <h1 className="font-bold text-xs">City/Town</h1>
+                                                                <TextField id="cityOffice" sx={{ width: "100%", backgroundColor: "#F5F5F5" }} variant="outlined" defaultValue={cartItems[0]?.user_id.address.filter((ele: any) => ele.addressType == "Office")[0]?.city} />
+                                                            </div>
+                                                            <div className="w-1/2 flex flex-col gap-2">
+                                                                <h1 className="font-bold text-xs">State</h1>
+                                                                <TextField id="stateOffice" sx={{ width: "100%", backgroundColor: "#F5F5F5" }} variant="outlined" defaultValue={cartItems[0]?.user_id.address.filter((ele: any) => ele.addressType == "Office")[0]?.state} />
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex justify-end">
+                                                            <Button variant="contained" sx={{ height: "25px", fontSize: "10px", marginTop: "8px", textAlign: "center" }} onClick={() => { setShowOffice(false); updateOfficeAddress() }}>save</Button>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div className="flex">
+                                                <FormControlLabel value="home" control={<Radio color="error" size="small" />} label="2. Home" />
+                                                <Button variant="outlined" sx={{ height: "25px", fontSize: "10px", marginTop: "8px", textAlign: "center" }} onClick={() => { setShowHome(true); setShowOffice(false); }}>edit</Button>
+                                            </div>
+                                            <div className="w-full p-5 flex flex-col gap-5">
+                                                <h1 className="font-bold text-xs">Address</h1>
+                                                {!showHome ?
+                                                    <div className="w-full flex flex-col gap-2">
+                                                        {cartItems[0]?.user_id?.address.map((ele: any, key: any) => {
+                                                            if (ele?.addressType == "Home") {
+                                                                return (<>
+                                                                    <h1 className="text-slate-500 text-sm">{ele.fullAddress} {ele.city} {ele.state}</h1>
+                                                                </>)
+                                                            }
+                                                        })}
+                                                    </div>
+                                                    :
+                                                    <div className="w-full flex flex-col gap-2">
+                                                        <TextField id="fullAddressHome" sx={{ width: "100%", backgroundColor: "#F5F5F5" }} variant="outlined" defaultValue={cartItems[0]?.user_id.address.filter((ele: any) => ele.addressType == "Home")[0]?.fullAddress} />
+                                                        <div className="w-3/4 flex gap-10">
+                                                            <div className="w-1/2 flex flex-col gap-2">
+                                                                <h1 className="font-bold text-xs">City/Town</h1>
+                                                                <TextField id="cityHome" sx={{ width: "100%", backgroundColor: "#F5F5F5" }} variant="outlined" defaultValue={cartItems[0]?.user_id.address.filter((ele: any) => ele.addressType == "Home")[0]?.city} />
+                                                            </div>
+                                                            <div className="w-1/2 flex flex-col gap-2">
+                                                                <h1 className="font-bold text-xs">State</h1>
+                                                                <TextField id="stateHome" sx={{ width: "100%", backgroundColor: "#F5F5F5" }} variant="outlined" defaultValue={cartItems[0]?.user_id.address.filter((ele: any) => ele.addressType == "Home")[0]?.state} />
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex justify-end">
+                                                            <Button variant="contained" sx={{ height: "25px", fontSize: "10px", marginTop: "8px", textAlign: "center" }} onClick={() => { setShowHome(false); updateHomeAddress() }}>save</Button>
+                                                        </div>
+                                                    </div>
+                                                }
                                             </div>
                                         </RadioGroup>
                                     </FormControl>
@@ -166,52 +256,45 @@ function CartComponent() {
                                         slots={{ transition: Fade as AccordionSlots['transition'] }}
                                         slotProps={{ transition: { timeout: 400 } }}
                                         sx={{
-                                        boxShadow:"none",
-                                        '& .MuiAccordion-region': { height: expanded ? 'auto' : 0 },
-                                        '& .MuiAccordionDetails-root': { display: expanded ? 'block' : 'none' },
+                                            boxShadow: "none",
+                                            '& .MuiAccordion-region': { height: expanded ? 'auto' : 0 },
+                                            '& .MuiAccordionDetails-root': { display: expanded ? 'block' : 'none' },
                                         }}
-                                        >
+                                    >
                                         <AccordionSummary
-                                            // expandIcon={<ExpandMoreIcon />}
                                             aria-controls="panel2-content"
                                             id="panel2-header"
-                                            >
+                                        >
                                             <Button variant="contained">Continue</Button>
                                         </AccordionSummary>
                                     </Accordion>
                                 </div>
                             </div>
                         </AccordionDetails>
-                    </Accordion>
+                    </Accordion >
                     <Accordion
                         expanded={expandedNew}
                         onChange={handleExpansionNew}
                         slots={{ transition: Fade as AccordionSlots['transition'] }}
                         slotProps={{ transition: { timeout: 400 } }}
                         sx={{
-                        '& .MuiAccordion-region': { height: expandedNew ? 'auto' : 0 },
-                        '& .MuiAccordionDetails-root': { display: expandedNew ? 'block' : 'none' },
+                            '& .MuiAccordion-region': { height: expandedNew ? 'auto' : 0 },
+                            '& .MuiAccordionDetails-root': { display: expandedNew ? 'block' : 'none' },
                         }}
-                        >
+                    >
                         <Typography className="p-5 font-bold">Order Summery</Typography>
                         <AccordionDetails>
                             <div className="w-full">
-                                <OrderedBookComponent />
+                                {bookDetail?.map((val: any) => <OrderedBookComponent bookList={val} key={val._id} />)}
                                 <div className='flex justify-end'>
-                                    <Button variant="contained">Checkout</Button>
+                                    <Button variant="contained" onClick={() => { addBookToOrder(); navigate("/book/order"); }}>Checkout</Button>
                                 </div>
                             </div>
                         </AccordionDetails>
                     </Accordion>
-                </div>
-
-
-
-
-                
-                
-            </div>
-        </div>
+                </div >
+            </div >
+        </div >
         <Outlet />
     </>)
 }

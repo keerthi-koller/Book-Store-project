@@ -14,6 +14,8 @@ import CartComponent from './components/CartComponent';
 import { Provider } from 'react-redux';
 import appStore from './utils/store/appstore';
 import WishListComponent from './components/WishListComponent';
+import OrderPlacedComponent from './components/OrderPlacedComponent';
+import MyOrdersComponent from './components/MyOrdersComponent';
 
 const router = createBrowserRouter([
   {
@@ -43,6 +45,14 @@ const router = createBrowserRouter([
       {
         path: 'wishListDetails',
         element: <WishListComponent />
+      },
+      {
+        path: 'order',
+        element: <OrderPlacedComponent />
+      },
+      {
+        path: 'myOrders',
+        element: <MyOrdersComponent />
       }
     ]
   },

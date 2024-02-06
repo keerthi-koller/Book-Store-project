@@ -17,6 +17,16 @@ const cartSlice = createSlice({
                 return ele
             } )
         },
+        updateCartAddress : (state:any, action) => {
+            state.cartitems[0]?.user_id?.address.map((ele:any) => {
+                if (ele.addressType === action.payload.addressType) {
+                    ele.fullAddress = action.payload.fullAddress;
+                    ele.state = action.payload.state;
+                    ele.city = action.payload.city;
+                }
+                return ele;
+            })
+        },
         getCartListBooks : (state:any, action) => {
             state.cartitems = action.payload;
         },
@@ -26,5 +36,5 @@ const cartSlice = createSlice({
     },
 });
 
-export const { addItemToCart, getCartListBooks, deleteCartListBooks, updateCartList } = cartSlice.actions;
+export const { addItemToCart, getCartListBooks, deleteCartListBooks, updateCartAddress, updateCartList } = cartSlice.actions;
 export default cartSlice.reducer;

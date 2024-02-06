@@ -5,7 +5,7 @@ import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined
 import { Badge, Button, FormControl, InputAdornment, InputLabel, Menu, MenuItem, OutlinedInput } from '@mui/material';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getAllBooks, getAllCartLists, getAllWishLists } from '../utils/BookUtil';
 import { addBookList } from '../utils/store/bookSlice';
 import { useEffect, useState } from 'react';
@@ -15,10 +15,8 @@ import PermIdentityOutlinedIcon from '@mui/icons-material/PermIdentityOutlined';
 import StoreMallDirectoryOutlinedIcon from '@mui/icons-material/StoreMallDirectoryOutlined';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 
-
 function Home() {
 
-    const [len, setLen] = useState(0);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -44,8 +42,9 @@ function Home() {
     const getAllCartListedBooks = async () => {
         const cartListBooks = await getAllCartLists();
         dispatch(getCartListBooks(cartListBooks));
-        setLen(cartListBooks.length);
     }
+
+    const cartItems = useSelector((store: any) => store.cart.cartitems);
 
     useEffect(() => {
         getAllBooksList();
@@ -89,7 +88,7 @@ function Home() {
                             sx={{ fontSize: "20px", gap: "3px" }}
                             onClick={handleClick}>
                             <h1 className='flex justify-center'><PersonOutlineOutlinedIcon sx={{ fontSize: "25px", color: "white" }} /></h1>
-                            <p className='text-xs text-white'>Poonam</p>
+                            <p className='text-xs text-white'>{cartItems[0]?.user_id?.fullName}</p>
                         </Button>
                         <Menu
                             id="basic-menu"
@@ -102,17 +101,17 @@ function Home() {
                         >
                             <h1 className='font-bold m-4 mt-0 w-[200px] text-xl'>Hello Poonam,</h1>
                             <MenuItem onClick={handleClose}><PermIdentityOutlinedIcon sx={{ marginRight: "10px" }} />Profile</MenuItem>
-                            <MenuItem onClick={handleClose}><StoreMallDirectoryOutlinedIcon sx={{ marginRight: "10px" }} />My Orders</MenuItem>
-                            <MenuItem onClick={() => { handleClose(); navigate("wishListDetails"); }}><FavoriteBorderOutlinedIcon sx={{ marginRight: "10px" }} />My Wishlist</MenuItem>
+                            <MenuItem onClick={ () => { handleClose(); navigate("myOrders"); } }><StoreMallDirectoryOutlinedIcon sx={{ marginRight: "10px" }} />My Orders</MenuItem>
+                            <MenuItem onClick={ () => { handleClose(); navigate("wishListDetails"); }}><FavoriteBorderOutlinedIcon sx={{ marginRight: "10px" }} />My Wishlist</MenuItem>
                             <Button variant="outlined" color='error' sx={{ width: "200px", marginLeft: "15px", marginTop: "15px" }}>Logout</Button>
                         </Menu>
-                        
-                        <Badge badgeContent={len} color="primary">
+
+                        <Badge badgeContent={cartItems.length} color="primary">
                             <div className='flex flex-col gap-1'>
                                 <img src={supermarket} alt='img' onClick={() => navigate("cartDetails")} />
-                                <p className='text-xs text-white'>Cart</p> 
-                            </div>                       
-                        </Badge>    
+                                <p className='text-xs text-white'>Cart</p>
+                            </div>
+                        </Badge>
                     </div>
                 </div>
             </div >
