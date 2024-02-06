@@ -3,7 +3,7 @@ import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 
 interface OrderDetailInterface {
     product_id : {
-        author:string,
+        author:string | undefined,
         description:string,
         bookName:string,
         discountPrice:number,
