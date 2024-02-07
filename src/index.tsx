@@ -1,4 +1,3 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
@@ -9,7 +8,6 @@ import BooksComponent from './components/BooksComponent';
 import ErrorComponent from './components/ErrorComponent';
 import ForgotPassword from './components/ForgotPassword';
 import BookDetails from './components/BookDetails';
-import FeedbackComponent from './components/FeedbackComponent';
 import CartComponent from './components/CartComponent';
 import { Provider } from 'react-redux';
 import appStore from './utils/store/appstore';
@@ -66,13 +64,9 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  // <React.StrictMode>
   <Provider store={appStore}>
     <RouterProvider router={router} />
-
   </Provider>
-  // <App />
-  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
