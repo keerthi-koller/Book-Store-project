@@ -29,6 +29,7 @@ interface BooksListInterface {
 }
 
 function CartCardComponent({ bookList }: { bookList: BooksListInterface }) {
+    
     const dispatch = useDispatch();
 
     const incrementAddedItems = () => {

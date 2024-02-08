@@ -27,34 +27,27 @@ interface BookDetailInterface {
     _id: string | undefined
 }
 
-interface FeedBackInterface {
-    comment: string,
-    rating: number
-}
-
 function BookDetails() {
+
+    const [bookDetail, setBookDetail] = useState<BookDetailInterface | undefined>();
+    const [showAddToBag, setShowAddToBag] = useState<boolean>();
+    const [wishListed, setWishListed] = useState(false);
+    const [value, setValue] = useState<number | null>();
+    const [imgBorder1, setImgBorder1] = useState("#7C1E1E");
+    const [imgBorder2, setImgBorder2] = useState("");
+    const [imgView, setImgView] = useState(`${Book1}`);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { bookId } = useParams();
-    const [bookDetail, setBookDetail] = useState<BookDetailInterface | undefined>();
-    const [showAddToBag, setShowAddToBag] = useState<boolean>();
-    let [addedItems, setAddedItems] = useState(1);
-    const [wishListed, setWishListed] = useState(false);
-    const [feedbacks, setFeedbacks] = useState<FeedBackInterface[] | undefined>();
-
-
+    
     const books = useSelector((store: any) => store.books.bookList);
-
     const wishLists = useSelector((store: any) => store.wishList.wishListItems);
-    const wish = wishLists.filter((ele: any) => ele._id == bookId);
-
     const cartLists = useSelector((store: any) => store.cart.cartitems);
-    const cart = cartLists.filter((ele: any) => ele.product_id?._id == bookId);
-
-
     const feedBackReviews = useSelector((store: any) => store.feedback.feedbackItems);
 
+    const wish = wishLists.filter((ele: any) => ele._id == bookId);
+    const cart = cartLists.filter((ele: any) => ele.product_id?._id == bookId);
 
     useEffect(() => {
         setBookDetail(books.filter((ele: any) => ele._id === bookId)[0]);
@@ -63,7 +56,6 @@ function BookDetails() {
         }
         if (cart[0]?._id) {
             setShowAddToBag(true);
-            setAddedItems(cart[0].quantityToBuy)
         }
     }, [books, wishLists, cartLists]);
 
@@ -82,11 +74,6 @@ function BookDetails() {
         dispatch(addItemToCart({ "product_id": bookDetail, quantityToBuy:1, "_id": cartId._id }));
         setShowAddToBag(true);
     }
-
-    const [value, setValue] = useState<number | null>();
-    const [imgBorder1, setImgBorder1] = useState("#7C1E1E");
-    const [imgBorder2, setImgBorder2] = useState("");
-    const [imgView, setImgView] = useState(`${Book1}`);
 
     const setImgFrontView = () => {
         setImgView(`${Book1}`);

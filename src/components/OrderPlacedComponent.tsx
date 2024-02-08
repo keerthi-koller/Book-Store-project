@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 function OrderPlacedComponent() {
 
     const navigate = useNavigate();
+    
     return (<>
         <div className="w-full flex justify-center items-center">
             <div className="w-3/4 flex justify-center flex-col m-10 gap-10 items-center">

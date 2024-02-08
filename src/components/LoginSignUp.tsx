@@ -9,6 +9,7 @@ import Login from './Login';
 import SignUp from './SignUp';
 
 function LoginSignUp () {
+    
     const [value, setValue] = useState('1');
     const [bgColor, setBgColor] = useState("#00000029");
 

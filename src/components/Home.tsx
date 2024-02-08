@@ -18,16 +18,31 @@ import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlin
 function Home() {
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    
     const open = Boolean(anchorEl);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const cartItems = useSelector((store: any) => store.cart.cartitems);
+
+    useEffect(() => {
+        getAllBooksList();
+        getAllWishListedBooks();
+        getAllCartListedBooks();
+    }, []);
+
+    const logout = () => {
+        navigate("/");
+        localStorage.removeItem("accessToken");
+    }
+    
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
+
     const handleClose = () => {
         setAnchorEl(null);
     };
-
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
 
     const getAllBooksList = async () => {
         const books = await getAllBooks();
@@ -43,14 +58,6 @@ function Home() {
         const cartListBooks = await getAllCartLists();
         dispatch(getCartListBooks(cartListBooks));
     }
-
-    const cartItems = useSelector((store: any) => store.cart.cartitems);
-
-    useEffect(() => {
-        getAllBooksList();
-        getAllWishListedBooks();
-        getAllCartListedBooks();
-    }, []);
 
     return (
         <>
@@ -98,12 +105,13 @@ function Home() {
                             MenuListProps={{
                                 'aria-labelledby': 'basic-button',
                             }}
+                            className='h-[450px]'
                         >
                             <h1 className='font-bold m-4 mt-0 w-[200px] text-xl'>Hello Poonam,</h1>
-                            <MenuItem onClick={handleClose}><PermIdentityOutlinedIcon sx={{ marginRight: "10px" }} />Profile</MenuItem>
+                            <MenuItem onClick={ () => { handleClose(); navigate("profile") } }><PermIdentityOutlinedIcon sx={{ marginRight: "10px" }} />Profile</MenuItem>
                             <MenuItem onClick={ () => { handleClose(); navigate("myOrders"); } }><StoreMallDirectoryOutlinedIcon sx={{ marginRight: "10px" }} />My Orders</MenuItem>
                             <MenuItem onClick={ () => { handleClose(); navigate("wishListDetails"); }}><FavoriteBorderOutlinedIcon sx={{ marginRight: "10px" }} />My Wishlist</MenuItem>
-                            <Button variant="outlined" color='error' sx={{ width: "200px", marginLeft: "15px", marginTop: "15px" }}>Logout</Button>
+                            <Button variant="outlined" color='error' sx={{ width: "200px", marginLeft: "15px", marginTop: "15px" }} onClick={logout}>Logout</Button>
                         </Menu>
 
                         <Badge badgeContent={cartItems.length} color="primary">
@@ -116,7 +124,7 @@ function Home() {
                 </div>
             </div >
 
-            <Outlet />
+            <div className="min-h-[calc(92.8vh-60px)]"><Outlet/></div>
 
             <div className="text-white h-[50px] w-full flex justify-center items-center" style={{ backgroundColor: "#2E1D1E" }}>
                 <p className='w-3/4 text-sm'>Copyright <CopyrightIcon sx={{ fontSize: "16px" }} /> 2020, Bookstore Private Limited. All Rights Reserved</p>

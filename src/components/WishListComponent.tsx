@@ -1,7 +1,7 @@
-import { Button, IconButton } from "@mui/material";
+import { Button } from "@mui/material";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import WishListCardComponent from "./WishListCardComponent";
 
 interface BookDetailInterface {
@@ -26,12 +26,11 @@ interface BookDetailInterface {
 
 function WishListComponent() {
 
-    const navigate = useNavigate();
     const [bookDetail, setBookDetail] = useState<BookDetailInterface[] | undefined>();
 
-    const wishListItems = useSelector((store: any) => store.wishList.wishListItems);
+    const navigate = useNavigate();
 
-    console.log(bookDetail);
+    const wishListItems = useSelector((store: any) => store.wishList.wishListItems);
 
     useEffect(() => {
         setBookDetail(wishListItems);
@@ -53,7 +52,7 @@ function WishListComponent() {
                     </div>
                     <div className="">
                         {bookDetail?.length == 0 ?
-                            <h1 className="w-3/4 flex justify-center">Your Wishlist is Empty</h1>
+                            <h1 className="w-3/4 flex justify-center">Your Wishlist is Empty!!</h1>
                             :
                             bookDetail?.map((val: any) =>
                                 <div className="border-b-2 p-5 flex justify-between items-center">
@@ -64,7 +63,7 @@ function WishListComponent() {
                 </div>
             </div>
         </div>
-        {/* <Outlet /> */}
+        <Outlet />
     </>)
 }
 

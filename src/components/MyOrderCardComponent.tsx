@@ -14,6 +14,7 @@ interface OrderDetailInterface {
 }
 
 function MyOrderCardComponent ({bookList}:{bookList:OrderDetailInterface}) {
+    
     return (<>
         <div className="w-full flex justify-between items-center bg-white">
             <div className="flex w-1/2 m-5">

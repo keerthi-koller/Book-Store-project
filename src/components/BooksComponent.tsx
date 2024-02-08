@@ -24,21 +24,14 @@ interface BooksListInterface {
 function BooksComponent() {
 
     const [sortBooks, setSortBooks] = useState('');
+    const [page, setPage] = useState(1);
+
     const dispatch = useDispatch();
     const books = useSelector((store: any) => store.books.bookList);
 
-    const [page, setPage] = useState(1);
     const handleChangePagi = (event: React.ChangeEvent<unknown>, value: number) => {
         setPage(value);
     };
-
-    const count = Math.ceil(books.length/12);
-    let book:any = [];
-
-    const begin = (page - 1) * 12;
-    const end = begin + 12;
-    book=books.slice(begin, end)
-
     const handleChange = (event: SelectChangeEvent) => {
         setSortBooks(event.target.value as string);
 
@@ -55,6 +48,13 @@ function BooksComponent() {
             dispatch(addBookList(newestArrivals));
         }
     };
+
+    const count = Math.ceil(books.length/12);
+    let book:any = [];
+
+    const begin = (page - 1) * 12;
+    const end = begin + 12;
+    book=books.slice(begin, end);
 
     return (<>
         <div className="w-full bg-white flex flex-col justify-center items-center">
@@ -87,8 +87,8 @@ function BooksComponent() {
                             </>)
                         })
                         :
-                        <div className="w-full h-full flex justify-center items-center">
-                            <CircularProgress />
+                        <div className="w-[1150px] h-full flex justify-center items-center">
+                            <CircularProgress className="" />
                         </div>
                     }
                 </div>

@@ -17,8 +17,13 @@ interface OrderDetailInterface {
 
 function MyOrdersComponent () {
 
-    const navigate = useNavigate();
     const [orderDetail, setOrderDetail] = useState<OrderDetailInterface[]>();
+
+    const navigate = useNavigate();
+
+    useEffect( () => {
+        getAllOrders();
+    }, [] );
 
     const getAllOrders = () => {
         const orders = localStorage.getItem("myOrders");
@@ -28,11 +33,6 @@ function MyOrdersComponent () {
             setOrderDetail(myOrders);
         }
     }
-
-    useEffect( () => {
-        getAllOrders();
-    }, [] );
-
     
     return (<>
         <div className="w-full flex justify-center items-center">

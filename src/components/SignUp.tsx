@@ -16,11 +16,9 @@ function SignUp () {
     const [errorName, setErrorName] = useState<ErrorMessage[]>([]);
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
-  
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
     };
-
     const handleUpdateUser = () => {
 
         const fullName = (document.getElementById("outlined-basic")as HTMLInputElement).value;

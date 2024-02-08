@@ -14,6 +14,7 @@ import appStore from './utils/store/appstore';
 import WishListComponent from './components/WishListComponent';
 import OrderPlacedComponent from './components/OrderPlacedComponent';
 import MyOrdersComponent from './components/MyOrdersComponent';
+import ProfileComponent from './components/ProfileComponent';
 
 const router = createBrowserRouter([
   {
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
       {
         path: 'myOrders',
         element: <MyOrdersComponent />
+      },
+      {
+        path: 'profile',
+        element: <ProfileComponent />
       }
     ]
   },

@@ -10,8 +10,8 @@ import Typography from '@mui/material/Typography';
 import Fade from '@mui/material/Fade';
 import OrderedBookComponent from "./OrderedBookComponent";
 import { customerDetails } from "../utils/UserUtil";
-import { updateCartAddress } from "../utils/store/cartSlice";
-import { addOrder } from "../utils/BookUtil";
+import { deleteCartListBooks, getCartListBooks, updateCartAddress } from "../utils/store/cartSlice";
+import { addOrder, deleteCartBook } from "../utils/BookUtil";
 
 interface BookDetailInterface {
     author: string,
@@ -28,19 +28,52 @@ function CartComponent() {
     const [showOffice, setShowOffice] = useState(false);
     const [showHome, setShowHome] = useState(false);
     const [expanded, setExpanded] = useState(false);
+    const [expandedNew, setExpandedNew] = useState(false);
+    const [bookDetail, setBookDetail] = useState<BookDetailInterface[] | undefined>();
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const cartItems = useSelector((store: any) => store.cart.cartitems);
+
+    useEffect(() => {
+        setBookDetail(cartItems);
+    }, [cartItems]);
+
+    const addBookToOrder = () => {
+        const orders = cartItems.map((ele: any) => {
+            const orderDetail = {
+                product_id: ele?.product_id?._id,
+                product_name: ele?.product_id?.bookName,
+                product_quantity: ele?.quantityToBuy,
+                product_price: ele?.product_id?.price,
+            }
+            return orderDetail;
+        })
+        const orderedBooks = {
+            orders: orders,
+        }
+        addOrder(orderedBooks);
+        dispatch(getCartListBooks([]));
+        // const orderDetail = JSON.stringify(cartItems);
+        // localStorage.setItem("myOrders", orderDetail);
+        let orderDetail = JSON.parse(localStorage.getItem("myOrders")!);
+        if (orderDetail == null) { localStorage.setItem("myOrders", "[]") }
+        orderDetail = [...orderDetail, ...cartItems];
+        console.log(orderDetail);
+        cartItems.map( (ele:any) => {
+            deleteCartBook(ele._id);
+            dispatch(deleteCartListBooks(ele._id));
+        } )
+    }
+
     const handleExpansion = () => {
         setExpanded((prevExpanded) => !prevExpanded);
     };
 
-    const [expandedNew, setExpandedNew] = useState(false);
     const handleExpansionNew = () => {
         setExpandedNew((prevExpanded) => !prevExpanded);
     };
-
-    const navigate = useNavigate();
-    const [bookDetail, setBookDetail] = useState<BookDetailInterface[] | undefined>();
-
-    const dispatch = useDispatch();
 
     const updateHomeAddress = () => {
         const obj = {
@@ -62,34 +95,6 @@ function CartComponent() {
         }
         customerDetails(obj);
         dispatch(updateCartAddress(obj));
-    }
-
-    const cartItems = useSelector((store: any) => store.cart.cartitems);
-    console.log(cartItems);    
-    const orderDetail = JSON.stringify(cartItems);
-    localStorage.setItem("myOrders", orderDetail);
-
-    useEffect(() => {
-        setBookDetail(cartItems);
-    }, [cartItems]);
-
-    const addBookToOrder = () => {
-
-        const orders = cartItems.map((ele: any) => {
-            const orderDetail = {
-                product_id: ele?.product_id?._id,
-                product_name: ele?.product_id?.bookName,
-                product_quantity: ele?.quantityToBuy,
-                product_price: ele?.product_id?.price,
-            }
-            return orderDetail;
-        })
-
-        const orderedBooks = {
-            orders: orders,
-        }
-
-        addOrder(orderedBooks);
     }
 
     return (<>

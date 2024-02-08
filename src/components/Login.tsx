@@ -6,24 +6,23 @@ import { loginUser } from "../utils/UserUtil";
 import { useNavigate } from "react-router-dom";
 
 interface ErrorMessage {
-    value : string,
-    msg : string,
-    param : string,
-    location : string
+    value : string | undefined,
+    msg : string | undefined,
+    param : string | undefined,
+    location : string | undefined
 }
 
 function Login () {
 
     const [showPassword, setShowPassword] = useState(false);
-    const navigate = useNavigate();
     const [errorName, setErrorName] = useState<ErrorMessage[]>([]);
 
+    const navigate = useNavigate();
+
     const handleClickShowPassword = () => setShowPassword((show) => !show);
-  
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
     };
-
     const handleLoginUser = () => {
         const email = (document.getElementById("outlined-basic")as HTMLInputElement).value;
         const password = (document.getElementById("outlined-adornment-password")as HTMLInputElement).value;
@@ -32,7 +31,6 @@ function Login () {
             email : email,
             password : password,
         }
-
         const result = loginUser(obj);
         result
         .then( (res) => {
@@ -45,16 +43,15 @@ function Login () {
             setErrorName(err.response.data.error);
         } )
     }
-
     const forgotPassword = () => {
         navigate("/home/forgotPassword");
     }
-  
+    
     return (<>
         <div className="flex flex-col gap-4 p-5 pt-0">
             <div className="flex flex-col">
                 <label className="text-xs">Email id</label>
-                <TextField id="outlined-basic" variant="outlined" size="small" error={errorName[0]?.param === "email" ? true : false} helperText={errorName[0]?.param === "email" ? errorName[0].msg : ""} />
+                <TextField id="outlined-basic" variant="outlined" size="small" error={errorName[0]?.param === "email" ? true : false} helperText={errorName[0]?.param === "email" ? errorName[0]?.msg : ""} />
             </div>
             <div className="flex flex-col">
                 <label className="text-xs">Password</label>

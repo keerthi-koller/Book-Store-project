@@ -11,7 +11,6 @@ import Book7 from "../assets/Book7.png";
 import Book8 from "../assets/Book8.png";
 import Book9 from "../assets/Book9.png";
 import Book0 from "../assets/Book0.png";
-import { useEffect } from "react";
 
 interface BooksListInterface {
     description: string,
@@ -26,13 +25,11 @@ interface BooksListInterface {
 
 function BookCardComponent({ bookList }: { bookList: BooksListInterface }) {
 
+    const imgLists = [Book0, Book1, Book2, Book3, Book4, Book5, Book6, Book7, Book8, Book9];
     const navigate = useNavigate();
-
     const handleShowBookDetails = () => {
         navigate(`${bookList._id}`);
     }
-
-    const imgLists = [Book0, Book1, Book2, Book3, Book4, Book5, Book6, Book7, Book8, Book9];
 
     return (<>
         <div className="h-auto w-[235px] border-2 border-[#E2E2E2]" onClick={handleShowBookDetails}>
