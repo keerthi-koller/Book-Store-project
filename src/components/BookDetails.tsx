@@ -24,7 +24,11 @@ interface BookDetailInterface {
     discountPrice: number | undefined,
     price: number | undefined,
     quantity: number | undefined,
-    _id: string | undefined
+    _id: string | undefined,
+    bookImage: string,
+    user_id: {
+        fullName: string,
+    }
 }
 
 function BookDetails() {
@@ -40,7 +44,7 @@ function BookDetails() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { bookId } = useParams();
-    
+
     const books = useSelector((store: any) => store.books.bookList);
     const wishLists = useSelector((store: any) => store.wishList.wishListItems);
     const cartLists = useSelector((store: any) => store.cart.cartitems);
@@ -48,20 +52,6 @@ function BookDetails() {
 
     const wish = wishLists.filter((ele: any) => ele._id == bookId);
     const cart = cartLists.filter((ele: any) => ele.product_id?._id == bookId);
-
-    useEffect(() => {
-        setBookDetail(books.filter((ele: any) => ele._id === bookId)[0]);
-        if (wish[0]?._id) {
-            setWishListed(true);
-        }
-        if (cart[0]?._id) {
-            setShowAddToBag(true);
-        }
-    }, [books, wishLists, cartLists]);
-
-    useEffect(() => {
-        handleGetAllReviews();
-    }, []);
 
     const wishListBook = () => {
         addWishList(bookDetail?._id);
@@ -71,7 +61,7 @@ function BookDetails() {
 
     const addToCart = async () => {
         const cartId = await addCartList(bookDetail?._id);
-        dispatch(addItemToCart({ "product_id": bookDetail, quantityToBuy:1, "_id": cartId._id }));
+        dispatch(addItemToCart({ "product_id": bookDetail, quantityToBuy: 1, "_id": cartId._id, "user_id": cartLists[0]?.user_id }));
         setShowAddToBag(true);
     }
 
@@ -108,20 +98,36 @@ function BookDetails() {
         }
     }
 
-    const handleSubmitReview = () => {
+    const handleSubmitReview = async () => {
         const reviewText = (document.getElementById("review") as HTMLInputElement);
         const reviewObj = {
-            comment: reviewText.value,
+            comment: reviewText?.value,
             rating: value
         }
-        const feedBack = addFeedback(reviewObj, bookDetail?._id);
+        const feedBack = await addFeedback(reviewObj, bookDetail?._id);
         dispatch(addItemToFeedbackList(feedBack));
+        (document.getElementById("review") as HTMLInputElement).value = "";
+        setValue(0);
     }
 
     const handleGetAllReviews = async () => {
         const reviews = await getFeedback(bookId!);
         dispatch(getFeedbackLists(reviews));
     }
+
+    useEffect(() => {
+        setBookDetail(books.filter((ele: any) => ele._id === bookId)[0]);
+        if (wish[0]?._id) {
+            setWishListed(true);
+        }
+        if (cart[0]?._id) {
+            setShowAddToBag(true);
+        }
+    }, [books, wishLists, cartLists]);
+
+    useEffect(() => {
+        handleGetAllReviews();
+    }, [cartLists]);
 
     return (<>
         <div className='flex w-full flex-col justify-center items-center'>
@@ -134,7 +140,7 @@ function BookDetails() {
                     <div className='w-2/4 flex'>
                         <div className=''>
                             <div className='border p-1' style={{ borderColor: `${imgBorder1}` }}>
-                                <img src={BookFront} alt="img" onClick={setImgFrontView} />
+                                <img src={BookFront} alt="img" onClick={setImgFrontView} className='w-[35px] h-[45px]' />
                             </div>
                             <div className='border p-1' style={{ borderColor: `${imgBorder2}` }}>
                                 <img src={BookBg} alt="img" className='w-[35px] h-[45px]' onClick={setImgBackView} />
@@ -218,7 +224,7 @@ function BookDetails() {
                             </div>
                         </div>
                         <div className='w-full'>
-                            {feedBackReviews.map((ele: any) => (<FeedbackComponent feedBack={ele} />))}
+                            {feedBackReviews?.map((ele: any) => (<FeedbackComponent feedBack={ele} />))}
                         </div>
                     </div>
                 </div>

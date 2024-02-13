@@ -18,7 +18,8 @@ interface BooksListInterface {
     price: number,
     quantity: number,
     author: string,
-    updatedAt: any
+    updatedAt: any,
+    bookImage: string,
 }
 
 function BooksComponent() {

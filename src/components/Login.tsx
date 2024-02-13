@@ -16,6 +16,7 @@ function Login () {
 
     const [showPassword, setShowPassword] = useState(false);
     const [errorName, setErrorName] = useState<ErrorMessage[]>([]);
+    const [pwd, setPwd] = useState("");
 
     const navigate = useNavigate();
 
@@ -34,12 +35,18 @@ function Login () {
         const result = loginUser(obj);
         result
         .then( (res) => {
+            setPwd(res.data.message);
             console.log(res);
-            localStorage.setItem("accessToken", res.data.result.accessToken);
-            navigate("/book");
+            if (res.data.message === 'successfully logged in') {
+                localStorage.setItem("accessToken", res.data.result.accessToken);
+                navigate("/book");    
+            }
+            else{
+                setPwd(res.data.message);
+            }
         } )
         .catch( (err) => {
-            console.log(err);            
+            console.log(err);          
             setErrorName(err.response.data.error);
         } )
     }
@@ -80,6 +87,7 @@ function Login () {
                         {errorName[0]?.msg}
                         </FormHelperText>
                     )}
+                    {pwd ? <p className="text-red-600 text-xs pl-5">{pwd}</p> : ""}
                 </FormControl>
                 <label className="text-xs text-right text-slate-400" onClick={forgotPassword}>Forgot Password?</label>
             </div>

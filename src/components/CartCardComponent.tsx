@@ -15,7 +15,8 @@ interface BooksListInterface {
         price: number,
         quantity: number,
         author: string,
-        quantityToBuy: number
+        quantityToBuy: number,
+        bookImage: string,
     },
     description: string,
     bookName: string,
@@ -25,17 +26,18 @@ interface BooksListInterface {
     price: number,
     quantity: number,
     author: string,
-    quantityToBuy: number
+    quantityToBuy: number,
+    bookImage: string,
 }
 
 function CartCardComponent({ bookList }: { bookList: BooksListInterface }) {
-    
+
     const dispatch = useDispatch();
 
     const incrementAddedItems = () => {
         let Qty = bookList.quantityToBuy;
         if (Qty != bookList.product_id.quantity) {
-            Qty++
+            Qty++;
             updateCartQty(bookList._id, Qty);
             dispatch(updateCartList({ "id": bookList._id, "quantity": Qty }))
         }
@@ -67,23 +69,23 @@ function CartCardComponent({ bookList }: { bookList: BooksListInterface }) {
                 <div className="flex w-1/2 items-center">
                     <div className="w-full flex flex-col gap-1">
                         <div className="w-full">
-                            <h1 className="font-bold">{bookList.product_id.bookName}</h1>
+                            <h1 className="font-bold">{bookList?.product_id?.bookName}</h1>
                         </div>
                         <div className="w-full">
-                            <p className="text-slate-400 text-[13px]">{bookList.product_id.author}</p>
+                            <p className="text-slate-400 text-[13px]">{bookList?.product_id?.author}</p>
                         </div>
                         <div className="w-full flex gap-2">
-                            <h1 className="font-bold">Rs. {bookList.product_id.discountPrice}</h1>
-                            <p className="line-through text-slate-400 text-sm">Rs. {bookList.product_id.price}</p>
+                            <h1 className="font-bold">Rs. {bookList?.product_id?.discountPrice}</h1>
+                            <p className="line-through text-slate-400 text-sm">Rs. {bookList?.product_id?.price}</p>
                         </div>
                         <div className='w-3/4 flex gap-5'>
                             <div className="w-1/2 flex justify-center items-center gap-1">
                                 <div className='w-1/5 h-[22px] border-2 flex justify-center items-center rounded-full'>
-                                    <Button sx={{ fontWeight: "bold", fontSize: "13px", borderColor: "#D1D1D1", color: "black" }} onClick={decrementAddedItems}>-</Button>
+                                    <Button sx={{ fontWeight: "bold", width: "10px", fontSize: "13px", borderColor: "#D1D1D1", color: "black" }} onClick={decrementAddedItems}>-</Button>
                                 </div>
-                                <Button variant="outlined" sx={{ backgroundColor: "transparent", color: "black", width: "80px", height: "22px", borderColor: "#D1D1D1" }}>{bookList.quantityToBuy}</Button>
+                                <Button variant="outlined" sx={{ backgroundColor: "transparent", color: "black", width: "80px", height: "22px", borderColor: "#D1D1D1" }}>{bookList?.quantityToBuy}</Button>
                                 <div className='w-1/5 h-[22px] border-2 flex justify-center items-center rounded-full'>
-                                    <Button sx={{ fontWeight: "bold", fontSize: "13px", borderColor: "#D1D1D1", color: "black" }} onClick={incrementAddedItems}>+</Button>
+                                    <Button sx={{ fontWeight: "bold", width: "10px", fontSize: "13px", borderColor: "#D1D1D1", color: "black" }} onClick={incrementAddedItems}>+</Button>
                                 </div>
                             </div>
                             <div className="w-1/2">

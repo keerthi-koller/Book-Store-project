@@ -21,10 +21,10 @@ function SignUp () {
     };
     const handleUpdateUser = () => {
 
-        const fullName = (document.getElementById("outlined-basic")as HTMLInputElement).value;
-        const email = (document.getElementById("outlined")as HTMLInputElement).value;
-        const password = (document.getElementById("outlined-adornment-password")as HTMLInputElement).value;
-        const phone = (document.getElementById("outlined-phone")as HTMLInputElement).value;
+        let fullName = (document.getElementById("outlined-basic")as HTMLInputElement).value;
+        let email = (document.getElementById("outlined")as HTMLInputElement).value;
+        let password = (document.getElementById("outlined-adornment-password")as HTMLInputElement).value;
+        let phone = (document.getElementById("outlined-phone")as HTMLInputElement).value;
 
         const obj = {
             fullName : fullName,
@@ -41,6 +41,10 @@ function SignUp () {
             console.log(err);            
             setErrorName(err.response.data.error);
         } )
+        fullName = "";
+        email = "";
+        password = "";
+        phone = "";
     }
   
     return (<>

@@ -16,6 +16,7 @@ interface BooksListInterface {
         price: number,
         quantity: number,
         author: string,
+        bookImage: string,
     },
     description: string,
     bookName: string,
@@ -25,7 +26,8 @@ interface BooksListInterface {
     price: number,
     quantity: number,
     author: string,
-    quantityToBuy: number
+    quantityToBuy: number,
+    bookImage: string,
 }
 
 function WishListCardComponent({ bookList }: { bookList: BooksListInterface }) {
@@ -46,14 +48,14 @@ function WishListCardComponent({ bookList }: { bookList: BooksListInterface }) {
                 <div className="flex w-1/2 items-center">
                     <div className="w-full flex flex-col gap-1">
                         <div className="w-full">
-                            <h1 className="font-bold">{bookList.product_id?.bookName}</h1>
+                            <h1 className="font-bold">{bookList?.product_id?.bookName}</h1>
                         </div>
                         <div className="w-full">
-                            <p className="text-slate-400 text-[13px]">{bookList.product_id?.author}</p>
+                            <p className="text-slate-400 text-[13px]">{bookList?.product_id?.author}</p>
                         </div>
                         <div className="w-full flex gap-2">
-                            <h1 className="font-bold">Rs. {bookList.product_id?.discountPrice}</h1>
-                            <p className="line-through text-slate-400 text-sm">Rs. {bookList.product_id?.price}</p>
+                            <h1 className="font-bold">Rs. {bookList?.product_id?.discountPrice}</h1>
+                            <p className="line-through text-slate-400 text-sm">Rs. {bookList?.product_id?.price}</p>
                         </div>
                     </div>
                 </div>

@@ -2,19 +2,21 @@ import Book1 from "../assets/Book1.png";
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 
 interface OrderDetailInterface {
-    product_id : {
-        author:string | undefined,
-        description:string,
-        bookName:string,
-        discountPrice:number,
-        price:number,
+    product_id: {
+        author: string | undefined,
+        description: string,
+        bookName: string,
+        discountPrice: number,
+        price: number,
+        bookImage: string,
     },
-    quantityToBuy : number,
+    quantityToBuy: number,
     updatedAt: string,
+    bookImage: string,
 }
 
-function MyOrderCardComponent ({bookList}:{bookList:OrderDetailInterface}) {
-    
+function MyOrderCardComponent({ bookList }: { bookList: OrderDetailInterface }) {
+
     return (<>
         <div className="w-full flex justify-between items-center bg-white">
             <div className="flex w-1/2 m-5">
@@ -40,7 +42,7 @@ function MyOrderCardComponent ({bookList}:{bookList:OrderDetailInterface}) {
                 </div>
             </div>
             <div>
-                <h1><FiberManualRecordIcon sx={{color:"green", fontSize:"15px", marginRight:"10px"}} />Order Placed on {bookList?.updatedAt.slice(0, 10)}</h1>
+                <h1><FiberManualRecordIcon sx={{ color: "green", fontSize: "15px", marginRight: "10px" }} />Order Placed on {bookList?.updatedAt?.slice(0, 10)}</h1>
             </div>
         </div>
     </>)

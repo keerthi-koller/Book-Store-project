@@ -2,9 +2,9 @@ import { Box, Rating } from "@mui/material";
 
 function FeedbackComponent({feedBack}:{feedBack:any}) {
 
-    const nameArray = feedBack.user_id.fullName.split(' ');
+    const nameArray = feedBack?.user_id?.fullName?.split(' ');
     let name = '';
-    nameArray.forEach((element:any) => {
+    nameArray?.forEach((element:any) => {
         name=name+element.charAt(0);
     });
     name=name.toUpperCase();

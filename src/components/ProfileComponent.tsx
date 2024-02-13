@@ -20,7 +20,7 @@ function ProfileComponent() {
                     <Button className="text-slate-500" onClick={() => navigate("/book")} sx={{ color: "gray", fontSize: "13px" }}>Home /</Button>
                     <p className="text-[12px] font-bold">Profile</p>
                 </div>
-                <div className="w-3/4 border-2 border-[#E2E2E2] flex flex-col gap-10 pl-[50px]">
+                <div className="w-3/4 border-2 border-[#E2E2E2] flex flex-col gap-10 pl-[50px] p-10">
                     <div className="w-2/3">
                         <h1 className="font-bold mb-5">Personal Details</h1>
                         <div className="w-full flex flex-col gap-3">
@@ -37,12 +37,6 @@ function ProfileComponent() {
                                 </div>
                             </div>
                             <div className="flex flex-col gap-1">
-                                <h1 className="font-medium text-xs">Password</h1>
-                                <div className="border border-2 border-[#E4E4E4] h-[50px] bg-[#F5F5F5] pl-5 flex items-center">
-                                    <h1>**********</h1>
-                                </div>
-                            </div>
-                            <div className="flex flex-col gap-1">
                                 <h1 className="font-medium text-xs">Mobile Number</h1>
                                 <div className="border border-2 border-[#E4E4E4] h-[50px] bg-[#F5F5F5] pl-5 flex items-center">
                                     <h1>{cartItems[0]?.user_id.phone}</h1>
@@ -50,7 +44,7 @@ function ProfileComponent() {
                             </div>
                         </div>
                     </div>
-                    {!showAddress ?
+                    {/* {!showAddress ?
                         <div className="w-2/3">
                             <div className="flex gap-3">
                                 <h1 className="font-bold mb-5">Address Details</h1>
@@ -126,7 +120,7 @@ function ProfileComponent() {
                                 </div>
                             </div>
                         </div>
-                    }
+                    } */}
                 </div>
             </div>
         </div>

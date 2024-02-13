@@ -14,6 +14,7 @@ interface BookDetailInterface {
         price: number | undefined,
         quantity: number | undefined,
         author: string | undefined,
+        bookImage: string,
     },
     author: string,
     bookName: string,
@@ -21,7 +22,8 @@ interface BookDetailInterface {
     discountPrice: number | undefined,
     price: number | undefined,
     quantity: number,
-    _id: string
+    _id: string,
+    bookImage: string,
 }
 
 function WishListComponent() {
@@ -52,7 +54,7 @@ function WishListComponent() {
                     </div>
                     <div className="">
                         {bookDetail?.length == 0 ?
-                            <h1 className="w-3/4 flex justify-center">Your Wishlist is Empty!!</h1>
+                            <h1 className="w-3/4 flex justify-center p-10">Your Wishlist is Empty!!</h1>
                             :
                             bookDetail?.map((val: any) =>
                                 <div className="border-b-2 p-5 flex justify-between items-center">

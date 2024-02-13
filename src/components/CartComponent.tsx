@@ -20,7 +20,12 @@ interface BookDetailInterface {
     discountPrice: number | undefined,
     price: number | undefined,
     quantity: number | undefined,
-    _id: string
+    _id: string,
+    bookImage: string,
+    user_id: {
+        fullName: string,
+        phone: string,
+    }
 }
 
 function CartComponent() {
@@ -30,6 +35,7 @@ function CartComponent() {
     const [expanded, setExpanded] = useState(false);
     const [expandedNew, setExpandedNew] = useState(false);
     const [bookDetail, setBookDetail] = useState<BookDetailInterface[] | undefined>();
+    const [orderEmpty, setOrderEmpty] = useState(false);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -39,6 +45,9 @@ function CartComponent() {
     useEffect(() => {
         setBookDetail(cartItems);
     }, [cartItems]);
+
+    console.log(cartItems);
+    
 
     const addBookToOrder = () => {
         const orders = cartItems.map((ele: any) => {
@@ -54,17 +63,22 @@ function CartComponent() {
             orders: orders,
         }
         addOrder(orderedBooks);
-        dispatch(getCartListBooks([]));
-        // const orderDetail = JSON.stringify(cartItems);
-        // localStorage.setItem("myOrders", orderDetail);
-        let orderDetail = JSON.parse(localStorage.getItem("myOrders")!);
-        if (orderDetail == null) { localStorage.setItem("myOrders", "[]") }
-        orderDetail = [...orderDetail, ...cartItems];
-        console.log(orderDetail);
-        cartItems.map( (ele:any) => {
+
+        let orderDetail: any;
+        if (localStorage.getItem("myOrders") === null) {
+            orderDetail = [];
+        }
+        else {
+            orderDetail = JSON.parse(localStorage.getItem("myOrders")!);
+        }
+
+        orderDetail.push(...cartItems);
+        localStorage.setItem("myOrders", JSON.stringify(orderDetail));
+
+        cartItems.map((ele: any) => {
             deleteCartBook(ele._id);
             dispatch(deleteCartListBooks(ele._id));
-        } )
+        })
     }
 
     const handleExpansion = () => {
@@ -97,6 +111,10 @@ function CartComponent() {
         dispatch(updateCartAddress(obj));
     }
 
+    const placeOrderEmpty = () => {
+        (bookDetail?.length == 0 || bookDetail?.length == undefined) ? setOrderEmpty(true) : setOrderEmpty(false)
+    }
+
     return (<>
         <div className="w-full flex justify-center items-center">
             <div className="w-3/4 flex flex-col gap-10 m-10">
@@ -109,34 +127,36 @@ function CartComponent() {
                         <div>
                             <h1 className="font-bold">My cart ({bookDetail?.length})</h1>
                         </div>
-                        <div className="border border-2 border-[#E2E2E2] p-1">
-                            <h1>BridgeLabz Solutions Bangalore</h1>
-                        </div>
                     </div>
                     {bookDetail?.length == 0 ?
-                        <h1 className="w-3/4 flex justify-center">Your Cart is Empty</h1>
+                        <h1 className="w-3/4 flex justify-center p-10">Your Cart is Empty</h1>
                         :
                         bookDetail?.map((val: any) => <CartCardComponent bookList={val} key={val._id} />)
                     }
+                    {orderEmpty ? <h1 className="w-3/4 flex text-red-500 justify-center mt-[-20px]">Please add books to cart to continue</h1> : ""}
                     <div className='flex justify-end'>
-                        <Accordion
-                            expanded={expanded}
-                            onChange={handleExpansion}
-                            slots={{ transition: Fade as AccordionSlots['transition'] }}
-                            slotProps={{ transition: { timeout: 400 } }}
-                            sx={{
-                                boxShadow: "none",
-                                '& .MuiAccordion-region': { height: expanded ? 'auto' : 0 },
-                                '& .MuiAccordionDetails-root': { display: expanded ? 'block' : 'none' },
-                            }}
-                        >
-                            <AccordionSummary
-                                aria-controls="panel1-content"
-                                id="panel1-header"
+                        {(bookDetail?.length == 0 || bookDetail?.length == undefined) ?
+                            <Button variant="contained" onClick={placeOrderEmpty}>Place Order</Button>
+                            :
+                            <Accordion
+                                expanded={expanded}
+                                onChange={handleExpansion}
+                                slots={{ transition: Fade as AccordionSlots['transition'] }}
+                                slotProps={{ transition: { timeout: 400 } }}
+                                sx={{
+                                    boxShadow: "none",
+                                    '& .MuiAccordion-region': { height: expanded ? 'auto' : 0 },
+                                    '& .MuiAccordionDetails-root': { display: expanded ? 'block' : 'none' },
+                                }}
                             >
-                                <Button variant="contained">Place Order</Button>
-                            </AccordionSummary>
-                        </Accordion>
+                                <AccordionSummary
+                                    aria-controls="panel1-content"
+                                    id="panel1-header"
+                                >
+                                    <Button variant="contained">Place Order</Button>
+                                </AccordionSummary>
+                            </Accordion>
+                        }
                     </div>
                 </div>
 

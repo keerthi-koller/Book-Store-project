@@ -10,14 +10,18 @@ interface OrderDetailInterface {
         bookName:string,
         discountPrice:number,
         price:number,
+        bookImage: string,
     },
     quantityToBuy : number,
     updatedAt: string,
+    bookImage: string,
 }
 
 function MyOrdersComponent () {
 
     const [orderDetail, setOrderDetail] = useState<OrderDetailInterface[]>();
+    console.log(orderDetail);
+    
 
     const navigate = useNavigate();
 
@@ -48,8 +52,8 @@ function MyOrdersComponent () {
                         </div>
                     </div>
                     <div className="">
-                        {orderDetail?.length == 0 ?
-                            <h1 className="w-3/4 flex justify-center">Your Wishlist is Empty</h1>
+                        {(orderDetail?.length == 0 || orderDetail == undefined) ?
+                            <h1 className="w-3/4 flex justify-center p-10">Your Order List is Empty</h1>
                             :
                             orderDetail?.map((val: any) =>
                                 <div className="border-b-2 p-5 flex justify-between items-center">
